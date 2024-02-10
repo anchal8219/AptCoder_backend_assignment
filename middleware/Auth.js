@@ -1,24 +1,25 @@
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = process.env;
+
 exports.auth = async (req, res, next) => {
   try {
-    const token =
-      req.headers.authorization || req.query.token || req.body.token;
+    const token = req.headers.authorization;
 
-    // Check if token exists
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // Verify token
-    jwt.verify(token, process.env.jwt, (err, decoded) => {
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Unauthorized" });
       } else {
-        // Attach decoded user object to request for further processing
         req.user = decoded;
         next();
       }
     });
-  } catch (err) {}
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 
 

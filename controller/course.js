@@ -21,37 +21,40 @@ exports.createCourse = async(req,res)=>{
   }
 }
 
-// const updateCourse = async(req, res) => {
-//     const courseId = req.params.courseId;
-//     const updatedAttributes = req.body;
-//     CourseService.updateCourse(courseId, updatedAttributes);
-//     res.json({ message: 'Course updated successfully' });
-// };
-
-
-// Route handler for student
-const getCourseStudent = async (req, res) => {
+exports.updateCourse = async (req, res) => {
   try {
-    // Fetch course data specific to students (e.g., only certain details)
-    const courses = await Course.find({}, 'name subject');
-    res.json(courses);
+      const courseId = req.params.courseId;
+      const { courseName, subject, numberOfChapters, type, learnMode } = req.body;
+      res.status(200).json({ success: true, message: 'Course updated successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ success: false, error: error.message });
   }
 };
 
-// Route handler for course developer/content developer
-const getCourseDeveloper = async (req, res) => {
-  try {
-    // Fetch course data specific to course developers/content developers
-    const courses = await Course.find({}, 'name subject chapters noOfClasses type learnMode');
-    res.json(courses);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+
+exports.getCoursesForStudent = async (req, res) => {
+    try {
+        const courses = await Course.find({}); 
+        res.status(200).json({ success: true, courses });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 };
 
-module.exports = {
-    createCourse,
-    updateCourse
-}
+
+exports.getCoursesForCourseDeveloper = async (req, res) => {
+    try {
+        if (req.user.role !== 'course-developer') {
+            return res.status(403).json({ success: false, message: 'Access forbidden' });
+        }
+
+        const courses = await Course.find({ createdBy: req.user.userId }); 
+        res.status(200).json({ success: true, courses });
+        
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+
+
