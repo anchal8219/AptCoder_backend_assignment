@@ -3,7 +3,7 @@ const config = require('../config/db')
 const jwtProvider = require("../config/jwtProvider")
 const User = require("../models/user_model")
 require('dotenv').config();
-const userService = require("../services/user")
+// const userService = require("../services/user")
 
 
 exports.signup = async(req,res)=>{
