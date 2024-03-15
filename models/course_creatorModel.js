@@ -1,9 +1,7 @@
-// models/course.js
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-// Define the Course schema
 const courseSchema = new Schema({
   courseName: {
     type: String,

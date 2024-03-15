@@ -14,17 +14,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // token:{
-    //     type: String,
-    //     default:''
-    // },
     role:{
         type: String,
         enum: ['creator', 'teacher', 'student'],
-        // default: 'user'
+        default: 'student'
     }
 })
 
-// creating a table for the above schema
 const User = mongoose.model("User",userSchema);
 module.exports = User;
